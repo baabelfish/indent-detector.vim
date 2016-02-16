@@ -46,27 +46,11 @@ func indent_detector#detect(autoadjust)
 	endif
 endfunc
 
-" echolevel: 0 - none; 1 - error; 2 - warnning; 3 - info (all)
-func indent_detector#hook(autoadjust, echolevel)
+func indent_detector#hook(autoadjust)
 	if &readonly == 0 "if file writeable
-		let rst = indent_detector#detect(a:autoadjust)
-		if rst == 'mixed'
-			if a:echolevel > 0
-				echohl ErrorMsg | echom 'mixed indent' | echohl None 
-			endif
-		elseif rst[0] == 's' "space
-			if rst[8] == '>' "too many
-				if a:echolevel > 1
-					echohl WarningMsg | echom 'too many leading spaces here.' | echohl None 
-				endif
-			else
-				if a:echolevel > 2
-					echo 'indent: '.rst
-				endif
-			endif
-		endif
+		call indent_detector#detect(a:autoadjust)
 	endif
 endfunc
 
-auto bufenter * call indent_detector#hook(1, 3)
-auto bufwritepost * call indent_detector#hook(1, 2)
+auto bufenter * call indent_detector#hook(1)
+auto bufwritepost * call indent_detector#hook(1)
